@@ -115,8 +115,14 @@ export default function Home() {
         </Stack>  
       </Box>
     </Modal>
-    <Typography variant="h1">Pantrynomenon</Typography>
-    
+    <Button variant="container" onClick={() => {
+      handleOpen();
+    }}>
+      Add New Item
+    </Button>
+    <Box border='1px solid black #333'>
+      <Box width="800px" height="100px" bgcolor="#ADD8E6"></Box>
+    </Box>
   </Box>
   );
 }
