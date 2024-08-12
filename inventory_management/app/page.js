@@ -71,6 +71,7 @@ export default function Home() {
     width="100vw"
     height="100vh"
     display="flex"
+    flexDirection="column"
     justifyContent="center"
     alignItems="center"
     gap={2}
@@ -120,8 +121,33 @@ export default function Home() {
     }}>
       Add New Item
     </Button>
-    <Box border='1px solid black #333'>
-      <Box width="800px" height="100px" bgcolor="#ADD8E6"></Box>
+    <Box border='3px solid black #333'>
+      <Box width="800px" height="100px" bgcolor="#ADD8E6" alignItems="center" justifyContent="center" display="flex">
+        <Typography variant="h4" color="#333">Inventory</Typography>
+      </Box>
+    <Stack width="800px" height="300px" spacing={2} overflow="auto">
+      {
+        inventory.map(({name, quantity}) => (
+          <Box
+            key={name}
+            width="100%"
+            minHeight="150px"
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+            bgcolor={"#f0f0f0"}
+            padding={5}
+          >
+            <Typography variant="h6" color="#333" textAlign="center">
+              {name.charAt(0).toUpperCase() + name.slice(1)}
+            </Typography>
+            <Typography variant="h6" color="#333" textAlign="center">
+              {quantity}
+            </Typography>
+            <Button variant="contained" onClick={() => removeItem(name)}>Remove</Button>
+          </Box>
+      ))}
+    </Stack>
     </Box>
   </Box>
   );
