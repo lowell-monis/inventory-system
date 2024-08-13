@@ -3,7 +3,7 @@ import Image from "next/image";
 import {useState, useEffect} from "react";
 import {firestore} from "@/firebase";
 import {Box, Modal, Button, Container, Grid, Typography, Stack, TextField} from "@mui/material";
-import { collection, deleteDoc, getDocs, query, setDoc } from "firebase/firestore";
+import { collection, deleteDoc, getDocs, query, setDoc, getDoc, doc } from "firebase/firestore";
 
 export default function Home() {
   const [inventory, setInventory] = useState([]);
