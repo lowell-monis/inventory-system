@@ -7,8 +7,9 @@ import { collection, deleteDoc, getDocs, query, setDoc, getDoc, doc } from "fire
 
 export default function Home() {
   const [inventory, setInventory] = useState([]);
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [itemName, setItemName] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const updateInventory = async () => {
     const snapshot = query(collection(firestore, 'inventory'));
@@ -66,6 +67,10 @@ export default function Home() {
     setOpen(false);
   };
 
+  const filteredInventory = inventory.filter(item =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
   <Box
     width="100vw"
@@ -121,37 +126,51 @@ export default function Home() {
     }}>
       Add New Item
     </Button>
+    <TextField
+        variant="outlined"
+        placeholder="Search..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        sx={{ marginBottom: 2, width: '800px' }}
+      />
     <Box border='3px solid black #333'>
       <Box width="800px" height="100px" bgcolor="#ADD8E6" alignItems="center" justifyContent="center" display="flex">
         <Typography variant="h4" color="#333">Inventory</Typography>
       </Box>
-    <Stack width="800px" height="300px" spacing={2} overflow="auto">
-      {
-        inventory.map(({name, quantity}) => (
-          <Box
-            key={name}
-            width="100%"
-            minHeight="150px"
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
-            bgcolor={"#f0f0f0"}
-            padding={5}
-          >
-            <Typography variant="h6" color="#333" textAlign="center">
-              {name.charAt(0).toUpperCase() + name.slice(1)}
-            </Typography>
-            <Typography variant="h6" color="#333" textAlign="center">
-              {quantity}
-            </Typography>
-            <Stack direction="row" spacing={2}>
-            <Button variant="contained" onClick={() => addItem(name)}>Add</Button>
-            <Button variant="contained" onClick={() => removeItem(name)}>Remove</Button>
-            </Stack>
-          </Box>
-      ))}
-    </Stack>
+      <Stack width="800px" height="300px" spacing={2} overflow="auto">
+          {
+            filteredInventory.length > 0 ? (
+              filteredInventory.map(({ name, quantity }) => (
+                <Box
+                  key={name}
+                  width="100%"
+                  minHeight="150px"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="space-between"
+                  bgcolor={"#f0f0f0"}
+                  padding={5}
+                >
+                  <Typography variant="h6" color="#333" textAlign="center">
+                    {name.charAt(0).toUpperCase() + name.slice(1)}
+                  </Typography>
+                  <Typography variant="h6" color="#333" textAlign="center">
+                    {quantity}
+                  </Typography>
+                  <Stack direction="row" spacing={2}>
+                    <Button variant="contained" onClick={() => addItem(name)}>Add</Button>
+                    <Button variant="contained" onClick={() => removeItem(name)}>Remove</Button>
+                  </Stack>
+                </Box>
+              ))
+            ) : (
+              <Typography variant="h6" color="#333" textAlign="center" padding={5}>
+                No items found.
+              </Typography>
+            )
+          }
+        </Stack>
+      </Box>
     </Box>
-  </Box>
   );
 }
