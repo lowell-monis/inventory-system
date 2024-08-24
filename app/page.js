@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { firestore, storage } from "@/firebase";
 import { Box, Modal, Button, Typography, Stack, TextField } from "@mui/material";
 import { collection, deleteDoc, getDocs, query, setDoc, getDoc, doc } from "firebase/firestore";
-import { ref, uploadString, getDownloadURL } from "firebase/storage";
+import { ref, uploadString, getDownloadURL, getStorage } from "firebase/storage";
 
 export default function Home() {
   const [inventory, setInventory] = useState([]);
