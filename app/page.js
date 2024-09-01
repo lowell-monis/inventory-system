@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { firestore, storage } from "@/firebase";
 import { Box, Modal, Button, Typography, Stack, TextField } from "@mui/material";
 import { collection, deleteDoc, getDocs, query, setDoc, getDoc, doc } from "firebase/firestore";
-import { ref, uploadString, getDownloadURL, getStorage } from "firebase/storage";
+import { ref, uploadString, getDownloadURL } from "firebase/storage";
 
 export default function Home() {
   const [inventory, setInventory] = useState([]);
@@ -30,13 +30,13 @@ export default function Home() {
     setInventory(inventoryList);
   };
 
-  const addItem = async (item) => {
+  const addItem = async (itemName) => {
     let imageUrl = '';
     if (imageData) {
-      imageUrl = await uploadImage(imageData);
+      imageUrl = await uploadImage(imageData, itemName);
     }
 
-    const docRef = doc(collection(firestore, 'inventory'), item);
+    const docRef = doc(collection(firestore, 'inventory'), itemName);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
@@ -66,7 +66,7 @@ export default function Home() {
   };
 
   const uploadImage = async (imageData) => {
-    const storageRef = ref(storage, `images/${Date.now()}.png`);
+    const storageRef = ref(storage, `images/${itemName}.png`);
     try {
       await uploadString(storageRef, imageData, 'data_url');
       const downloadURL = await getDownloadURL(storageRef);
@@ -168,12 +168,10 @@ export default function Home() {
             </Button>
           </Stack>
 
-          {/* Camera capture section */}
           <video ref={videoRef} autoPlay style={{ width: '100%' }} />
           <Button onClick={captureImage}>Capture Image</Button>
           <canvas ref={canvasRef} style={{ display: 'none' }} width={640} height={480} />
 
-          {/* Preview the captured image */}
           {imageData && <img src={imageData} alt="Captured Image" style={{ width: '100%', marginTop: '10px' }} />}
         </Box>
       </Modal>
@@ -211,7 +209,6 @@ export default function Home() {
                   <Typography variant="h6" color="#333" textAlign="center">
                     {quantity}
                   </Typography>
-                  {/* Display the captured image if available */}
                   {imageUrl && <Image src={imageUrl} alt={name} width={50} height={50} />}
                   <Stack direction="row" spacing={2}>
                     <Button variant="contained" onClick={() => addItem(name)}>Add</Button>
